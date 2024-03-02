@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --accent-color: #0078d7;
+            --button-color: #eee;
+            --button-hover-color: #ddd;
+            --button-active-color: #000;
+            --button-text-color: #333;
+            --button-active-text-color: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --border-color: #ccc;
+            --border-radius: 5px;
+            --font-family: "Segoe UI", sans-serif;
+            --font-size: 18px;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* 修改布局以适应主题切换按钮 */
+        }
+
+        .calculator {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            margin-top: 100px; /* 调整距离顶部的间距 */
+        }
+        .calculator__screen {
+            font-size: 20px;
+            border: none;
+            padding: 10px;
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: var(--font-size);
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .calculator__button-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .calculator__button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background-color: var(--button-color);
+            cursor: pointer;
+            margin: 5px;
+            font-size: var(--font-size);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+            color: var(--button-text-color);
+        }
+
+        .calculator__button:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        .calculator__button:active {
+            background-color: var(--button-active-color);
+            color: var(--button-active-text-color);
+        }
+
+        .calculator__button--equal {
+            background-color: var(--accent-color);
+            color: var(--button-active-text-color);
+        }
+
+        .dark-mode {
+            --bg-color: #333;
+            --text-color: #f4f4f4;
+            --accent-color: #0078d7;
+            --button-color: #444;
+            --button-hover-color: #555;
+            --button-active-color: #666;
+            --button-text-color: #f4f4f4;
+            --button-active-text-color: #fff;
+            --shadow-color: rgba(255, 255, 255, 0.2);
+            --border-color: #888;
+        }
+
+        .theme-switcher {
+            position: fixed;
+            top: 120px; /* 调整为放置在 nav 下方 */
+            right: 20px;
+            z-index: 1001; /* 确保按钮在所有元素之上 */
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            z-index: 1000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .nav {
+            position: fixed;
+            top: 60px; /* 根据 header 的实际高度调整 */
+            left: 0;
+            width: 100%;
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+            z-index: 999;
+            padding: 10px 0; /* 添加一些内边距以便更好地展示 */
+        }
+
+        .nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="theme-switcher">
+        <button class="calculator__button" onclick="toggleDarkMode()">☀</button>
+    </div>
+    <div class="calculator">
+    <div class="calculator__screen" id="screen"></div>
+        <div class="calculator__button-row">
+            <button class="calculator__button" onclick="addToScreen('7')">7</button>
+            <button class="calculator__button" onclick="addToScreen('8')">8</button>
+            <button class="calculator__button" onclick="addToScreen('9')">9</button>
+            <button class="calculator__button" onclick="addToScreen('/')">/</button>
+        </div>
+        <div class="calculator__button-row">
+            <button class="calculator__button" onclick="addToScreen('4')">4</button>
+            <button class="calculator__button" onclick="addToScreen('5')">5</button>
+            <button class="calculator__button" onclick="addToScreen('6')">6</button>
+            <button class="calculator__button" onclick="addToScreen('*')">*</button>
+        </div>
+        <div class="calculator__button-row">
+            <button class="calculator__button" onclick="addToScreen('1')">1</button>
+            <button class="calculator__button" onclick="addToScreen('2')">2</button>
+            <button class="calculator__button" onclick="addToScreen('3')">3</button>
+            <button class="calculator__button" onclick="addToScreen('-')">-</button>
+        </div>
+        <div class="calculator__button-row">
+            <button class="calculator__button" onclick="addToScreen('0')">0</button>
+            <button class="calculator__button" onclick="addToScreen('.')">.</button>
+            <button class="calculator__button calculator__button--equal" onclick="calculate()">=</button>
+            <button class="calculator__button" onclick="addToScreen('+')">+</button>
+        </div>
+        <div class="calculator__button-row">
+            <button class="calculator__button" onclick="clearScreen()">C</button>
+            <button class="calculator__button" onclick="calculateSquareRoot()">√</button>
+            <button class="calculator__button" onclick="calculateFactorial()">!</button>
+            <button class="calculator__button" onclick="addToScreen('^')">^</button>
+        </div>
+    </div>
+    <div class="theme-switcher">
+        <button class="calculator__button" onclick="toggleDarkMode()">☀</button>
+    </div>
+	</div>
+
+    <script>
+        function addToScreen(value) {
+            document.getElementById("screen").innerHTML += value;
+        }
+
+        function calculate() {
+            var expression = document.getElementById("screen").innerHTML;
+            var result = eval(expression);
+            document.getElementById("screen").innerHTML = result;
+        }
+
+        function calculateSquareRoot() {
+            var number = document.getElementById("screen").innerHTML;
+            var result = Math.sqrt(parseFloat(number));
+            document.getElementById("screen").innerHTML = result;
+        }
+
+        function calculateFactorial() {
+            var number = parseInt(document.getElementById("screen").innerHTML);
+            var result = 1;
+            for (var i = 1; i <= number; i++) {
+                result *= i;
+            }
+            document.getElementById("screen").innerHTML = result;
+        }
+
+        function calculatePower() {
+            var expression = document.getElementById("screen").innerHTML;
+            var parts = expression.split("^");
+            var base = parseFloat(parts[0]);
+            var exponent = parseFloat(parts[1]);
+            var result = Math.pow(base, exponent);
+            document.getElementById("screen").innerHTML = result;
+        }
+
+        function clearScreen() {
+            document.getElementById("screen").innerHTML = "";
+        }
+
+        function toggleDarkMode() {
+            var body = document.getElementsByTagName("body")[0];
+            if (body.classList.contains("dark-mode")) {
+                body.classList.remove("dark-mode");
+            } else {
+                body.classList.add("dark-mode");
+            }
+        }
+    </script>
+</body>
+</html>
